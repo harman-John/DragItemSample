@@ -79,20 +79,22 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
                     return true;
                 }
             });
-            holder.itemView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    switch (event.getAction()) {
-
-                        case MotionEvent.ACTION_MOVE:
-                            if (onStartDragListener != null) {
-                                onStartDragListener.startDrag(holder);
-                            }
-                            break;
-                    }
-                    return false;
-                }
-            });
+//            holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
+//                    switch (event.getAction()) {
+//
+//                        case MotionEvent.ACTION_MOVE:
+//                            if (longClick) {
+//                                if (onStartDragListener != null) {
+//                                    onStartDragListener.startDrag(holder);
+//                                }
+//                            }
+//                            break;
+//                    }
+//                    return false;
+//                }
+//            });
 
         }
 
