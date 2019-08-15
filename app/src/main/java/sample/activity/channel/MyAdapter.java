@@ -59,7 +59,6 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
         return new ViewHolder(view);
     }
 
-    private boolean isInDragState = false;
     private int mHeight = 0;
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
@@ -108,8 +107,6 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
                     mMyPresets.remove(0);
                     notifyItemRemoved(1);
                     notifyData();
-//                    notifyItemChanged(0);
-//                    notifyItemChanged(4);
 
                     RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mRecyclerView.getLayoutParams();
                     layoutParams.topMargin = 0;
@@ -120,22 +117,6 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
                     return true;
                 }
             });
-
-//            holder.itemView.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//                    switch (event.getAction()){
-//                        case MotionEvent.ACTION_DOWN:
-//                            break;
-//                        case MotionEvent.ACTION_CANCEL:
-//                        case MotionEvent.ACTION_UP:{
-//                            Log.d(TAG,"on touch up");
-//                            break;
-//                        }
-//                    }
-//                    return false;
-//                }
-//            });
         }
 
 
@@ -176,31 +157,6 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
         }
     }
 
-    private void move(int position) {
-
-        if (position > mMyPresets.size() + 1) {
-            int i = position - 2 - mMyPresets.size();
-            //其他
-            MyBean item = mMyCustoms.get(position - 2 - mMyPresets.size());
-            mMyCustoms.remove(item);
-            item.setTypeView(2);
-            mMyPresets.add(item);
-            notifyData();
-            notifyItemMoved(position, mMyPresets.size());
-
-        } else if (position > 0 && position <= mMyPresets.size()) {
-            //我的
-            MyBean item = mMyPresets.get(position - 1);
-            mMyPresets.remove(item);
-            item.setTypeView(3);
-            mMyCustoms.add(0, item);
-
-            notifyData();
-            notifyItemMoved(position, mMyPresets.size() + 2);
-        }
-    }
-
-
     @Override
     public void itemMoved(int oldPosition, int newPosition) {
 
@@ -220,8 +176,6 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
     }
 
     private void notifyData() {
-//        int fisType = mAllData.get(0).getTitleType();
-//        int secType = mAllData.get(5).getTitleType();
         mAllData.clear();
         mAllData.add(new MyBean("Preset", MY_TITLE,MY_TITLE_TYPE_VISIBLE));
         mAllData.addAll(mMyPresets);
