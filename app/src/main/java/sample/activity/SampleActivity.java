@@ -51,16 +51,16 @@ public class SampleActivity extends AppCompatActivity implements MyAdapter.OnSta
     private String[] EqPreset = {"OFF","JAZZ","VOCAL","BASS"};
     private List<MyBean> getDatas(){
         List<MyBean> beanList=new ArrayList<>();
-        beanList.add(new MyBean("Preset",1));
+        beanList.add(new MyBean("Preset",1,MyAdapter.MY_TITLE_TYPE_GONE));
 
         for(int i=0;i<4;i++){
-            beanList.add(new MyBean(EqPreset[i],2));
+            beanList.add(new MyBean(EqPreset[i],2,MyAdapter.MY_TITLE_TYPE_NONE));
         }
 
-        beanList.add(new MyBean("Custom",1));
+        beanList.add(new MyBean("Custom",1,MyAdapter.MY_TITLE_TYPE_GONE));
 
         for(int i=0;i<10;i++){
-            beanList.add(new MyBean("My EQ"+i,3));
+            beanList.add(new MyBean("My EQ"+i,3,MyAdapter.MY_TITLE_TYPE_NONE));
         }
 
         return beanList;

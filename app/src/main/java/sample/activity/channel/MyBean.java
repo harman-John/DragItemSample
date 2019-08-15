@@ -5,10 +5,12 @@ public class MyBean {
 
     String src;
     int typeView;
+    int titleType;
 
-    public MyBean(String src, int typeView) {
+    public MyBean(String src, int typeView, int titleType) {
         this.src = src;
         this.typeView = typeView;
+        this.titleType = titleType;
     }
 
     public String getSrc() {
@@ -25,5 +27,13 @@ public class MyBean {
 
     public void setTypeView(int typeView) {
         this.typeView = typeView;
+    }
+
+    public void setTitleType(int type) {
+        this.titleType = type;
+    }
+
+    public int getTitleType() {
+        return titleType;
     }
 }
