@@ -5,13 +5,17 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
+
+import java.util.logging.Logger;
 
 
 public class TouchListener extends ItemTouchHelper.Callback {
 
+    private static final String TAG = TouchListener.class.getSimpleName();
     private IItemHelper itemHelper;
 
-    public TouchListener(IItemHelper itemHelper){
+    public TouchListener(IItemHelper itemHelper) {
 
         this.itemHelper = itemHelper;
     }
@@ -34,7 +38,7 @@ public class TouchListener extends ItemTouchHelper.Callback {
         if (viewHolder.getItemViewType() != target.getItemViewType()) {
             return false;
         }
-        itemHelper.itemMoved(viewHolder.getLayoutPosition(),target.getLayoutPosition());
+        itemHelper.itemMoved(viewHolder.getLayoutPosition(), target.getLayoutPosition());
         return false;
     }
 
@@ -68,12 +72,10 @@ public class TouchListener extends ItemTouchHelper.Callback {
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-        if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-
-        }else if(actionState==ItemTouchHelper.ACTION_STATE_IDLE){
-
-         }else if(actionState==ItemTouchHelper.ACTION_STATE_DRAG){
-
-         }
+        Log.d(TAG, "onChildDraw actionState = " + actionState);
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+        } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+        } else if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+        }
     }
 }

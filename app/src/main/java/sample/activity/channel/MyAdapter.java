@@ -2,6 +2,7 @@ package sample.activity.channel;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +23,7 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
     public static final int MY_TITLE = 1;
     private static final int MY_PRESET = 2;
     private static final int MY_CUSTOM = 3;
+    private static final String TAG = MyAdapter.class.getSimpleName();
     private List<MyBean> mAllData;
     private List<MyBean> mMyPresets = new ArrayList<>();
     private List<MyBean> mMyCustoms = new ArrayList<>();
@@ -109,6 +111,17 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
                 }
             });
 
+            holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()){
+                        case MotionEvent.ACTION_UP:{
+
+                        }
+                    }
+                    return false;
+                }
+            });
         }
 
 
@@ -165,9 +178,9 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
             notifyData();
             notifyItemMoved(oldPosition, newPosition);
         } else {
-            MyBean myBean = mMyCustoms.get(oldPosition - 6);
-            mMyCustoms.remove(oldPosition - 6);
-            mMyCustoms.add(newPosition - 6, myBean);
+            MyBean myBean = mMyCustoms.get(oldPosition - mMyPresets.size() -2);
+            mMyCustoms.remove(oldPosition - mMyPresets.size() -2);
+            mMyCustoms.add(newPosition - mMyPresets.size() -2, myBean);
             notifyData();
             notifyItemMoved(oldPosition, newPosition);
         }
@@ -185,6 +198,7 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
 
     @Override
     public void itemDismiss(int position) {
+        Log.d(TAG,"itemDismiss position = "+position);
     }
 
     private OnStartDragListener onStartDragListener;
