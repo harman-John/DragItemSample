@@ -44,7 +44,19 @@ public class TouchListener extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        itemHelper.itemDismiss(viewHolder.getLayoutPosition());
+
+    }
+
+    @Override
+    public void onChildDrawOver(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        Log.d(TAG, "onChildDrawOver isCurrentlyActive = " + isCurrentlyActive + ",actionState = "+actionState);
+    }
+
+    @Override
+    public float getMoveThreshold(RecyclerView.ViewHolder viewHolder) {
+        Log.d(TAG, "getMoveThreshold ");
+        return super.getMoveThreshold(viewHolder);
     }
 
     @Override
@@ -61,6 +73,12 @@ public class TouchListener extends ItemTouchHelper.Callback {
 
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+
+        Log.d(TAG, "onSelectedChanged actionState = " + actionState);
+
+        if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+            itemHelper.itemDismiss();
+        }
         super.onSelectedChanged(viewHolder, actionState);
     }
 

@@ -1,7 +1,9 @@
 package sample.activity.channel;
 
 import android.content.Context;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,9 +32,11 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
 
     private final LayoutInflater mInflater;
     private RecyclerView mRecyclerView;
+    private Context mContext;
 
     public MyAdapter(Context context, List<MyBean> datas, RecyclerView recyclerView) {
         this.mAllData = datas;
+        mContext = context;
         mInflater = LayoutInflater.from(context);
         this.mRecyclerView = recyclerView;
         for (int i = 0; i < mAllData.size(); i++) {
@@ -56,7 +60,7 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
     }
 
     private boolean isInDragState = false;
-    private int mHeight;
+    private int mHeight = 0;
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         TextView channel = holder.getView(R.id.src);
@@ -69,8 +73,11 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
         }
         if (mAllData.get(holder.getAdapterPosition()).getTypeView() == MY_TITLE) {
             if (mAllData.get(holder.getAdapterPosition()).getTitleType() ==MY_TITLE_TYPE_GONE) {
+                if (mHeight == 0)
+                    mHeight = holder.itemView.getLayoutParams().height;
+                Log.d(TAG,"mHeight =" + mHeight);
+                Log.d(TAG,"mHeight holder h =" + holder.itemView.getLayoutParams().height);
                 holder.itemView.setVisibility(View.GONE);
-                mHeight = holder.itemView.getLayoutParams().height;
                 holder.itemView.getLayoutParams().height = 0;
             }else if (mAllData.get(holder.getAdapterPosition()).getTitleType() ==MY_TITLE_TYPE_VISIBLE){
                 holder.itemView.setVisibility(View.VISIBLE);
@@ -91,15 +98,18 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+                    Log.d(TAG,"on long click");
 
-                    mAllData.get(0).setTitleType(MY_TITLE_TYPE_VISIBLE);
-                    mAllData.get(5).setTitleType(MY_TITLE_TYPE_VISIBLE);
+                    mAllData.get(0).setTitleType(MY_TITLE_TYPE_GONE);
+                    mAllData.get(5).setTitleType(MY_TITLE_TYPE_GONE);
                     notifyItemChanged(0);
                     notifyItemChanged(5);
 
-                    mMyPresets.remove(1);
-                    notifyData();
+                    mMyPresets.remove(0);
                     notifyItemRemoved(1);
+                    notifyData();
+//                    notifyItemChanged(0);
+//                    notifyItemChanged(4);
 
                     RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mRecyclerView.getLayoutParams();
                     layoutParams.topMargin = 0;
@@ -111,20 +121,43 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
                 }
             });
 
-            holder.itemView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    switch (event.getAction()){
-                        case MotionEvent.ACTION_UP:{
-
-                        }
-                    }
-                    return false;
-                }
-            });
+//            holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
+//                    switch (event.getAction()){
+//                        case MotionEvent.ACTION_DOWN:
+//                            break;
+//                        case MotionEvent.ACTION_CANCEL:
+//                        case MotionEvent.ACTION_UP:{
+//                            Log.d(TAG,"on touch up");
+//                            break;
+//                        }
+//                    }
+//                    return false;
+//                }
+//            });
         }
 
 
+    }
+
+    @Override
+    public void itemDismiss() {
+        Log.d(TAG,"itemDismiss ");
+        mAllData.get(0).setTitleType(MY_TITLE_TYPE_GONE);
+        mAllData.get(4).setTitleType(MY_TITLE_TYPE_GONE);
+
+        notifyItemChanged(0);
+        notifyItemChanged(4);
+
+        mMyPresets.add(0,new MyBean("OFF",MY_PRESET,MY_TITLE_TYPE_NONE));
+        notifyItemInserted(1);
+        notifyDataBack();
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mRecyclerView.getLayoutParams();
+        layoutParams.topMargin = (int) convertDpToPixel(200,mContext);
+        mRecyclerView.setLayoutParams(layoutParams);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -190,15 +223,22 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> implements IItem
 //        int fisType = mAllData.get(0).getTitleType();
 //        int secType = mAllData.get(5).getTitleType();
         mAllData.clear();
-        mAllData.add(new MyBean("Preset", 1,MY_TITLE_TYPE_VISIBLE));
+        mAllData.add(new MyBean("Preset", MY_TITLE,MY_TITLE_TYPE_VISIBLE));
         mAllData.addAll(mMyPresets);
-        mAllData.add(new MyBean("Custom", 1,MY_TITLE_TYPE_VISIBLE));
+        mAllData.add(new MyBean("Custom", MY_TITLE,MY_TITLE_TYPE_VISIBLE));
         mAllData.addAll(mMyCustoms);
     }
 
-    @Override
-    public void itemDismiss(int position) {
-        Log.d(TAG,"itemDismiss position = "+position);
+    private void notifyDataBack() {
+        mAllData.clear();
+        mAllData.add(new MyBean("Preset", MY_TITLE,MY_TITLE_TYPE_GONE));
+        mAllData.addAll(mMyPresets);
+        mAllData.add(new MyBean("Custom", MY_TITLE,MY_TITLE_TYPE_GONE));
+        mAllData.addAll(mMyCustoms);
+    }
+
+    public static float convertDpToPixel(float dp, Context context){
+        return dp * ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
     private OnStartDragListener onStartDragListener;
